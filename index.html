@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Códigos Penais - RP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #36393f;
+            color: #dcddde;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #2f3136;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #40444b;
+        }
+        
+        h1 {
+            color: #7289da;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: #b9bbbe;
+            font-size: 16px;
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #40444b;
+            color: #dcddde;
+            font-size: 16px;
+        }
+        
+        #search:focus {
+            outline: 2px solid #7289da;
+        }
+        
+        .search-info {
+            margin-top: 10px;
+            color: #b9bbbe;
+            font-size: 14px;
+        }
+        
+        .laws-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .law-card {
+            background-color: #40444b;
+            border-radius: 6px;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #7289da;
+        }
+        
+        .law-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .law-code {
+            font-weight: bold;
+            color: #7289da;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .law-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .law-description {
+            color: #b9bbbe;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .law-penalty {
+            color: #e74c3c;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            color: #b9bbbe;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #72767d;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #40444b;
+        }
+        
+        @media (max-width: 768px) {
+            .laws-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Códigos Penais - RP</h1>
+            <p class="description">Baseado na legislação penal brasileira (Decreto-Lei nº 2.848/1940)</p>
+        </header>
+        
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Pesquisar código penal ou descrição...">
+            <p class="search-info">Digite para filtrar os códigos penais ou role para visualizar todos</p>
+        </div>
+        
+        <div class="laws-container" id="laws-container">
+        </div>
+        
+        <footer>
+            <p>Relatório gerado para fins de roleplay (RP), baseado na legislação penal brasileira real.</p>
+        </footer>
+    </div>
+
+    <script>
+        async function loadPenalCodes() {
+            try {
+                const penalCodes = [
+                    {
+                        code: "Art. 16",
+                        name: "Crime Impossível (Tentativa Inidônea)",
+                        description: "O agente não é punível na tentativa quando, por ineficácia absoluta do meio ou por absoluta impropriedade do objeto, é impossível consumar o crime.",
+                        penalty: "Não há pena, pois o crime é impossível."
+                    },
+                    {
+                        code: "Art. 33",
+                        name: "Tráfico de Drogas",
+                        description: "Importar, exportar, remeter, preparar, produzir, fabricar, adquirir, vender, expor à venda, oferecer, ter em depósito, transportar, trazer consigo, guardar, prescrever, ministrar ou entregar, de qualquer forma, a consumo, drogas sem autorização.",
+                        penalty: "Reclusão de 5 a 15 anos + multa."
+                    },
+                    {
+                        code: "Art. 87",
+                        name: "Suspensão Condicional da Pena (Sursis)",
+                        description: "A execução da pena privativa de liberdade, não superior a 2 anos, pode ser suspensa por 2 a 4 anos, desde que preenchidos requisitos.",
+                        penalty: "Suspensão de 2 a 4 anos."
+                    },
+                    {
+                        code: "Art. 121",
+                        name: "Homicídio",
+                        description: "Matar alguém.",
+                        penalty: "Reclusão de 6 a 20 anos."
+                    },
+                    {
+                        code: "Art. 129",
+                        name: "Lesão Corporal",
+                        description: "Ofender a integridade corporal ou a saúde de outrem.",
+                        penalty: "Detenção de 3 meses a 1 ano."
+                    },
+                    {
+                        code: "Art. 131",
+                        name: "Perigo de Contágio Venéreo",
+                        description: "Expor alguém, por meio de relações sexuais ou qualquer ato libidinoso, a contágio de moléstia venérea.",
+                        penalty: "Detenção de 3 meses a 1 ano."
+                    },
+                    {
+                        code: "Art. 147",
+                        name: "Ameaça",
+                        description: "Ameaçar alguém, por palavra, escrito ou gesto, ou qualquer outro meio simbólico, de causar-lhe mal injusto e grave.",
+                        penalty: "Detenção de 1 a 6 meses + multa."
+                    },
+                    {
+                        code: "Art. 148",
+                        name: "Sequestro e Cárcere Privado",
+                        description: "Privar alguém de sua liberdade, mediante sequestro ou cárcere privado.",
+                        penalty: "Reclusão de 1 a 3 anos."
+                    },
+                    {
+                        code: "Art. 150",
+                        name: "Violação de Domicílio",
+                        description: "Entrar ou permanecer, contra a vontade expressa ou tácita de quem de direito, em casa alheia ou em suas dependências.",
+                        penalty: "Detenção de 3 meses a 1 ano + multa."
+                    },
+                    {
+                        code: "Art. 155",
+                        name: "Furto",
+                        description: "Subtrair, para si ou para outrem, coisa alheia móvel.",
+                        penalty: "Reclusão de 1 a 4 anos + multa."
+                    },
+                    {
+                        code: "Art. 157",
+                        name: "Roubo",
+                        description: "Subtrair coisa móvel alheia, para si ou para outrem, mediante grave ameaça ou violência a pessoa.",
+                        penalty: "Reclusão de 4 a 10 anos + multa."
+                    },
+                    {
+                        code: "Art. 161",
+                        name: "Receptação",
+                        description: "Adquirir, receber, transportar, conduzir ou ocultar, em proveito próprio ou alheio, coisa que sabe ser produto de crime.",
+                        penalty: "Reclusão de 1 a 4 anos + multa."
+                    },
+                    {
+                        code: "Art. 163",
+                        name: "Dano",
+                        description: "Destruir, inutilizar ou deteriorar coisa alheia.",
+                        penalty: "Detenção de 1 a 6 meses + multa."
+                    },
+                    {
+                        code: "Art. 173",
+                        name: "Violação de Direito Autoral",
+                        description: "Violar direitos de autor e os que lhe são conexos.",
+                        penalty: "Detenção de 3 meses a 1 ano + multa."
+                    },
+                    {
+                        code: "Art. 175",
+                        name: "Abandono de Animal",
+                        description: "Abandonar animal do qual é dono ou tutor.",
+                        penalty: "Detenção de 1 a 6 meses + multa."
+                    },
+                    {
+                        code: "Art. 181",
+                        name: "Dano em Coisa de Valor Artístico, Arqueológico ou Histórico",
+                        description: "Destruir, inutilizar ou deteriorar coisa tombada pela autoridade competente em virtude de valor artístico, arqueológico ou histórico.",
+                        penalty: "Reclusão de 1 a 3 anos + multa."
+                    },
+                    {
+                        code: "Art. 218",
+                        name: "Estupro de Vulnerável",
+                        description: "Ter conjunção carnal ou praticar outro ato libidinoso com menor de 14 anos.",
+                        penalty: "Reclusão de 8 a 15 anos."
+                    },
+                    {
+                        code: "Art. 246",
+                        name: "Abandono Material",
+                        description: "Abandonar o cônjuge, companheiro, filho menor de 18 anos ou pessoa incapaz que está sob seu cuidado.",
+                        penalty: "Detenção de 1 a 4 anos + multa."
+                    },
+                    {
+                        code: "Art. 287",
+                        name: "Incitação ao Crime",
+                        description: "Publicamente, incitar a prática de crime.",
+                        penalty: "Detenção de 3 a 6 meses + multa."
+                    },
+                    {
+                        code: "Art. 288",
+                        name: "Formação de Quadrilha ou Bando",
+                        description: "Associarem-se mais de 3 pessoas para a prática de crimes.",
+                        penalty: "Reclusão de 1 a 3 anos."
+                    },
+                    {
+                        code: "Art. 309",
+                        name: "Evasão Mediante Violência Contra a Pessoa",
+                        description: "Evadir-se o preso ou quem está submetido a medida de segurança, usando de violência contra a pessoa.",
+                        penalty: "Reclusão de 3 meses a 1 ano, além da pena correspondente à violência."
+                    },
+                    {
+                        code: "Art. 329",
+                        name: "Desobediência",
+                        description: "Desobedecer a ordem legal de funcionário público.",
+                        penalty: "Detenção de 15 dias a 6 meses + multa."
+                    },
+                    {
+                        code: "Art. 331",
+                        name: "Desacato",
+                        description: "Desacatar funcionário público no exercício da função ou em razão dela.",
+                        penalty: "Detenção de 6 meses a 2 anos + multa."
+                    },
+                    {
+                        code: "Art. 333",
+                        name: "Corrupção Ativa",
+                        description: "Oferecer ou prometer vantagem indevida a funcionário público, para determiná-lo a praticar, omitir ou retardar ato de ofício.",
+                        penalty: "Reclusão de 2 a 12 anos + multa."
+                    },
+                    {
+                        code: "Art. 340",
+                        name: "Falso Testemunho ou Falsa Perícia",
+                        description: "Prestar falso testemunho, falsa perícia ou falsa tradução em processo judicial ou administrativo.",
+                        penalty: "Reclusão de 2 a 4 anos + multa."
+                    },
+                    {
+                        code: "Art. 11.1",
+                        name: "Morte do Agente",
+                        description: "Extingue-se a punibilidade com a morte do agente.",
+                        penalty: "Extinção da punibilidade."
+                    },
+                    {
+                        code: "Art. 11.2",
+                        name: "Anistia, Graça ou Indulto",
+                        description: "Extingue-se a punibilidade pela concessão de anistia, graça ou indulto.",
+                        penalty: "Extinção da punibilidade."
+                    },
+                    {
+                        code: "Art. 11.3",
+                        name: "Retroatividade de Lei",
+                        description: "Extingue-se a punibilidade quando a lei posterior deixa de considerar o fato como criminoso.",
+                        penalty: "Extinção da punibilidade."
+                    },
+                    {
+                        code: "Art. 11.4",
+                        name: "Prescrição, Decadência ou Perempção",
+                        description: "Extingue-se a punibilidade pela prescrição ou por outras causas previstas em lei.",
+                        penalty: "Extinção da punibilidade."
+                    },
+                    {
+                        code: "Art. 11.5",
+                        name: "Renúncia do Direito de Queixa ou Perdão Aceito",
+                        description: "Nos crimes de ação penal privada, o ofendido pode desistir da queixa ou perdoar o agente.",
+                        penalty: "Extinção da punibilidade."
+                    },
+                    {
+                        code: "Art. 11.6",
+                        name: "Retratação do Agente",
+                        description: "Em alguns crimes, o agente pode se retratar, extinguindo a punibilidade.",
+                        penalty: "Extinção da punibilidade."
+                    }
+                ];
+                
+                return penalCodes;
+            } catch (error) {
+                console.error('Erro ao carregar os códigos penais:', error);
+                return [];
+            }
+        }
+
+        function renderPenalCodes(codes) {
+            const container = document.getElementById('laws-container');
+            container.innerHTML = '';
+            
+            if (codes.length === 0) {
+                container.innerHTML = '<div class="no-results">Nenhum código penal encontrado com o termo pesquisado.</div>';
+                return;
+            }
+            
+            codes.forEach(law => {
+                const lawCard = document.createElement('div');
+                lawCard.className = 'law-card';
+
+                lawCard.innerHTML = `
+                    <div class="law-code">${law.code}</div>
+                    <div class="law-name">${law.name}</div>
+                    <div class="law-description">${law.description}</div>
+                    <div class="law-penalty">${law.penalty}</div>
+                `;
+                container.appendChild(lawCard);
+            });
+        }
+
+        function filterPenalCodes(codes) {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            
+            if (searchTerm.trim() === '') {
+                renderPenalCodes(codes);
+                return;
+            }
+            
+            const filteredCodes = codes.filter(law => {
+                return (
+                    law.code.toLowerCase().includes(searchTerm) ||
+                    law.name.toLowerCase().includes(searchTerm) ||
+                    law.description.toLowerCase().includes(searchTerm) ||
+                    law.penalty.toLowerCase().includes(searchTerm)
+                );
+            });
+            
+            renderPenalCodes(filteredCodes);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const penalCodes = await loadPenalCodes(); 
+            renderPenalCodes(penalCodes);
+
+            document.getElementById('search').addEventListener('input', () => filterPenalCodes(penalCodes));
+        });
+    </script>
+</body>
+</html>
